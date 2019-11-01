@@ -11,3 +11,6 @@ Die selbe Methode wird auch für das *Acknowledgement*-Paket benutzt. Der Vortei
  - QUIC: MQTT Short Connect over QUIC
  
 Every subfolder has the source code and its own README with further instructions.
+
+##CI/CD
+Every subfolder has its own *.gitlab.ci*, which can be used to setup and CI/CD environment.
