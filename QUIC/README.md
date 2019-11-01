@@ -1,23 +1,13 @@
-[![pipeline status](https://git.uniberg.com/tim.fehr/mqtt-short-connect/badges/MQTT_Short_Connect_QUANT/pipeline.svg)](https://git.uniberg.com/tim.fehr/mqtt-short-connect/commits/MQTT_Short_Connect_QUANT)
-
-# MQTT Short Connect
-MQTT Short Connect ist eine zusammenführung des Connect Packetes und des Subscribe Packetes. Damit wird die Latenz während des initialen Verbindungsaufbaus um 1 RTT gesenkt. Dieses Repo enthält diese Idee als eine Art *Proof of Concept* über verschiedne Transportprotokolle. Die hier eingesetzten Protokolle sind *TCP* mit der *Fast Open (TFO)* Funktion. *TCP* mit *TLS* in Versionen 1.2 und 1.3 und *QUIC*.
-
-Die Implementierung dient der Messung der *Round Trip Times* bei einem intialen Verbindungsaufbau und einen Wiederaufbau einer früheren Verbindung.
-
-Das Repo ist so aufgebaut, dass die jeweilige *MQTT Short Implementierung* in den einzelenen Branches, aufgeteilt auf die jeweiligen Transportprotokolle liegen. Jede branch enthält sowohl einen Client als auch einen Server. Die Konfiguration erfeolgt jeweils über eine *config* Datei. In der Datei "config.env" können alle Einstellungen wie die IP, der Port, die Client-ID und das Topic mit den gewünschten QoS vergenommen werden. **ACHTUNG**: Die Datei ist _case-sensitiv_. Es dürfen keine Leerzeichen in den Zeilen vorkommen!
-
-
-Außerdem enthält jeder Branch *Wiresahrk captures* in denen der Verbindungsaufbau und Wiederaufbau nachvollzogen werden kann. Die *captures* sind als *.pcap* vorhanden und wurden mit Hilfe der hier enthalten Programme erzeugt.
-
-## Transprtprotokoll
-Als Transportprotokoll kommt [*QUIC*](https://quicwg.org), welches sich zur Zeit im im Standartisierungsprozess der *IETF* befindet. *QUIC* baut auf *UDP* auf und verbindet dieses mit Optionen von *TCP*, zum Beispiel einer *Congestion Control*. Als Bibliothek zur Implementierung wird [*QUANT*](https://github.com/NTAP/quant) verwendet.
+## MQTT Short Connect over TCP
+Used transport protocol is QUIC.
 
 ## Prerequisite
- - QUANT
-
- ## Installation
- *MQTT Short Connect* nutzt als *build system* `cmake`.
+ - Linux Kernel > 3.7
+ - [OpenSSL](https://www.openssl.org/source/) in Version 1.1.1
+ - [QUANT](https://github.com/NTAP/quant) with branch *22*
+ 
+## Installation
+*MQTT Short Connect* nutzt als *build system* `cmake`.
 ```bash
     git submodule update --init --recursive
     mkdir build
@@ -25,4 +15,22 @@ Als Transportprotokoll kommt [*QUIC*](https://quicwg.org), welches sich zur Zeit
     cmake ..
     make
 ```
-Die Programm liegen dann im Ordner *build*.
+Create the certificate and key used by the server
+```bash
+    openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out cert.pem
+```
+## Config
+To adjust your config, just edit the *config.env*. Please be careful, this file is case sensitiv. Please do not change to layout of this file!
+## Run
+Server
+```bash
+    ./MQTT_Server
+```
+
+Client
+```bash
+    ./MQTT_Client
+```
+The TLS secrets will be saved in *keys.log*. This file can be used to decrypt the traffic.
+## Example captures
+Wireshark captures can be found in the subfolder *captures*. One for the initial session establishment and one for the resumption.
