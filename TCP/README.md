@@ -15,7 +15,6 @@ Used transport protocol is TCP with the Fast Open (TFO) option (if availible). T
 ```
 ## Config
 To adjust your config, just edit the *config.env*. Please be careful, this file is case sensitiv. Please do not change to layout of this file!
-
 ## Run
 Server
 ```bash
@@ -26,6 +25,5 @@ Client
 ```bash
     ./MQTT_Client
 ```
-
 ## Example captures
 Wireshark captures can be found in the subfolder *captures*. One for the initial session establishment and one for the resumption.
