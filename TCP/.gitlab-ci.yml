@@ -1,0 +1,20 @@
+image: gcc
+
+before_script:
+  - apt-get update && apt-get -y install cmake
+
+build:
+  stage: build
+  allow_failure: false
+  artifacts:
+    when: on_success
+    name: Binarys
+    expire_in: 1 day
+    paths:
+      - build/MQTT_Client
+      - build/MQTT_Server
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
